@@ -322,13 +322,31 @@ public class EvaluationService {
 			int maxIndex = getSortedList().size() - 1;
 			int currentIndex = 0;
 			int currentValue = 0;
-			int searchValue = (int)t;
+			int searchValue = 0;			
+			
+			try {
+				
+				searchValue = (int)t;
+				
+			} catch (Exception e) {
+				
+				searchValue = Integer.parseInt((String) t);
+			}
 			
 			//return searchValue;
 			while (minIndex <= maxIndex) {
 				
 				currentIndex = Math.round((minIndex + maxIndex) / 2);
-				currentValue = (int) getSortedList().get(currentIndex);
+				
+				try {
+					
+					currentValue = (int) getSortedList().get(currentIndex);
+					
+				} catch (Exception e) {
+					
+					currentValue = Integer.parseInt((String) getSortedList().get(currentIndex));
+				}
+				
 				
 				if (searchValue > currentValue) {
 					
@@ -519,30 +537,35 @@ public class EvaluationService {
 
 		public String rotate(String string) {
 			// TODO Write an implementation for this method declaration
-			String alphabet = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz";
-			char newString;
+			String alphabet = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			
 			
 			ArrayList <String> temp = new ArrayList<String>();
 			
 			for (int i = 0; i < string.length(); i++) {
 				
-				if (String.valueOf(string.charAt(i)) == " ") {
+				if (Character.isWhitespace(string.charAt(i))) {
 					temp.add(" ");
-				} else {
+				} else if(Character.isLetter(string.charAt(i))){
+					
 					int position = alphabet.indexOf(string.charAt(i));
 					int shiftedPosition = position + key;
 					String newLetter = String.valueOf(alphabet.charAt(shiftedPosition));
 					
 					temp.add(newLetter);
-				}
+					
+				} else {
+
+					String newLetter = String.valueOf(string.charAt(i));
+					temp.add(newLetter);
 				
-				
-		 
+				}	 
 			
 			
 			}
 			
 			String cipher = String.join("", temp);
+			//System.out.println(cipher);
 			return cipher;
 		}
 
@@ -563,7 +586,32 @@ public class EvaluationService {
 	 */
 	public int calculateNthPrime(int i) {
 		// TODO Write an implementation for this method declaration
-		return 0;
+		int result = 0;
+		int count = 0;
+		
+		if (i < 1) {
+			throw new IllegalArgumentException();
+		} else {
+			
+		
+		for (int x = 2; count < i; x++) {
+			result = x;
+			
+			if (x == 2 || x == 3 || x == 5) {
+				
+				count++;
+				
+			} else if (x % 2 != 0 && x % 3 != 0 && x % 5 != 0) {
+				//System.out.println("here");
+				count++;
+				
+			}
+			
+		
+		}
+		}
+		//System.out.println(result);
+		return result;
 	}
 
 	/**
@@ -713,8 +761,9 @@ public class EvaluationService {
 	public boolean isValidIsbn(String string) {
 		// TODO Write an implementation for this method declaration
 		
-		String clean = string.replaceAll("[^0-9]", "");
 		
+		String clean = string.replaceAll("[^0-9X]", "");
+		System.out.println(clean);
 		char[] temp = clean.toCharArray();
 		
 		int[] values = new int[temp.length];
@@ -723,6 +772,8 @@ public class EvaluationService {
 		    values[i] = Character.digit(temp[i], 10);
 		}
 		if (values.length == 10) {
+			
+		
 			int sum = values[0] * 10 + values[1] * 9 + values[2] * 8 + values[3] * 7 + values[4] * 6 + values[5] * 5 + values[6] * 4 + values[7] * 3 + values[8] * 2 + values[9] * 1;
 			
 			int solution = sum % 11;
